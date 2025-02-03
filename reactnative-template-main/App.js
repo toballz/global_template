@@ -1,19 +1,19 @@
-import React, { useEffect } from "react";
-import { isLoggedIn_returnUserId } from "./toi/p";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { GlobalStateContainer, useGlobalState } from "./toi/use_set_state";
-import Toast from "react-native-toast-message";
- 
+import React, { useEffect } from 'react';
+import { isLoggedIn_returnUserId } from './_m/p';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { GlobalStateContainer, useGlobalState } from './_m/use_set_state';
+import Toast from 'react-native-toast-message';
+
 import {
   Home_Screen,
   LoaderStarts_screen,
   Authentication_Screen,
   ManageProfile_Screen,
-} from "./toi/pages";
+} from './_m/pages';
 const Stack = createStackNavigator();
 
-function Oooo() {
+function MainPage() {
   const {
     _isLoggedIn_returnUserId,
     _setisLoggedIn_returnUserId,
@@ -29,51 +29,45 @@ function Oooo() {
         _setisLoading(false);
       }, 1000);
     })();
-  }, []);
+  }, [_setisLoading, _setisLoggedIn_returnUserId]);
 
   //loading
   if (_isLoading === null) {
-    return ( 
-        <LoaderStarts_screen /> 
+    return (
+      <LoaderStarts_screen />
     );
   }
 
   //
   //
-  if (
-    _isLoggedIn_returnUserId &&
-    typeof _isLoggedIn_returnUserId === "string" &&
-    _isLoggedIn_returnUserId.length > 3
-  ) {
-    return (
-      <>
+  return (
+    <>
+      {(_isLoggedIn_returnUserId &&
+        typeof _isLoggedIn_returnUserId === 'string' &&
+        _isLoggedIn_returnUserId.length > 3) ? (
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
             <Stack.Screen
               name="Home"
               component={Home_Screen}
-              //initialParams={{  }}
+            //initialParams={{  }}
             />
             <Stack.Screen name="Profile" component={ManageProfile_Screen} />
           </Stack.Navigator>
         </NavigationContainer>
-        {_isLoading && <LoaderStarts_screen />}
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Authentication_Screen />
-        {_isLoading && <LoaderStarts_screen />}
-      </>
-    );
-  }
+      ) : (
+        <Authentication_Screen />)}
+      {_isLoading && <LoaderStarts_screen />}
+    </>
+  );
+
 }
 
+//
 export default function App() {
   return (
     <GlobalStateContainer>
-      <Oooo />
+      <MainPage />
       <Toast />
     </GlobalStateContainer>
   );

@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react-native/no-inline-styles */
+import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   View,
   Text,
   Pressable,
   TextInput,
-} from "react-native";
-import * as p from "../toi/p";
-import { useGlobalState } from "../toi/use_set_state";
-import Toast from "react-native-toast-message";
+} from 'react-native';
+import * as p from '../_m/p';
+import { useGlobalState } from '../_m/use_set_state';
+import Toast from 'react-native-toast-message';
 
 /*
   loaderStarts_screen ()
@@ -19,16 +20,16 @@ export function LoaderStarts_screen() {
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        position: "absolute",
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.3)",
-        justifyContent: "center",
-        alignItems: "center",
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        zIndex:10,
+        elevation:10,
       }}
     >
       <ActivityIndicator size="large" color="#0000ff" />
@@ -48,9 +49,9 @@ export function Authentication_Screen() {
     _setisLoggedIn_returnUserId(false);
   });
   const [textInput, settextInput] = useState({
-    email: "",
-    password: "",
-    verifypassword: "",
+    email: '',
+    password: '',
+    verifypassword: '',
   });
   const handleChange_textInput = (field, value) => {
     settextInput((prevState) => ({
@@ -60,7 +61,7 @@ export function Authentication_Screen() {
   };
 
   //1:FORGOT 2:SIGNUP
-  const [pageToShow, setpageToShow] = useState("loginpage");
+  const [pageToShow, setpageToShow] = useState('loginpage');
   const pageToShowFun = (ag) => {
     return pageToShow && pageToShow === ag;
   };
@@ -70,27 +71,27 @@ export function Authentication_Screen() {
       style={[
         p.styles.container,
         {
-          backgroundColor: "aliceblue",
+          backgroundColor: 'aliceblue',
         },
       ]}
     >
-      <View style={{ flex: 1 }}></View>
+      <View style={{ flex: 1 }} />
       <View
         style={{
           flex: 4,
-          backgroundColor: "#fff",
+          backgroundColor: '#fff',
           borderTopEndRadius: 22,
           borderTopStartRadius: 22,
           padding: 12,
         }}
       >
-        {pageToShowFun("loginpage") && (
+        {pageToShowFun('loginpage') && (
           <Text style={p.styles.title}>Login</Text>
         )}
-        {pageToShowFun("signuppage") && (
+        {pageToShowFun('signuppage') && (
           <Text style={p.styles.title}>Create an Account!</Text>
         )}
-        {pageToShowFun("forgotpage") && (
+        {pageToShowFun('forgotpage') && (
           <Text style={p.styles.title}>Forgot Password?</Text>
         )}
 
@@ -98,46 +99,46 @@ export function Authentication_Screen() {
           style={[p.styles.input]}
           placeholder="Email"
           value={textInput.email}
-          onChangeText={(v) => handleChange_textInput("email", v)}
+          onChangeText={(v) => handleChange_textInput('email', v)}
         />
 
-        {!pageToShowFun("forgotpage") && (
+        {!pageToShowFun('forgotpage') && (
           <TextInput
             style={[p.styles.input]}
             placeholder="Password"
             value={textInput.password}
-            onChangeText={(v) => handleChange_textInput("password", v)}
+            onChangeText={(v) => handleChange_textInput('password', v)}
             secureTextEntry
           />
         )}
 
-        {pageToShowFun("signuppage") && (
+        {pageToShowFun('signuppage') && (
           <>
-            <Text style={{ color: "#5ebeec" }}>Verify Password!</Text>
+            <Text style={{ color: '#5ebeec' }}>Verify Password!</Text>
             <TextInput
               style={[p.styles.input, { marginBottom: 7 }]}
               placeholder="Verify Password"
               value={textInput.verifypassword}
-              onChangeText={(v) => handleChange_textInput("verifypassword", v)}
+              onChangeText={(v) => handleChange_textInput('verifypassword', v)}
               secureTextEntry
             />
           </>
         )}
 
-        {pageToShowFun("loginpage") && (
+        {pageToShowFun('loginpage') && (
           <Pressable
             onPress={() => {
-              setpageToShow("forgotpage");
+              setpageToShow('forgotpage');
             }}
             style={{ marginBottom: 12, marginTop: 1 }}
           >
-            <Text style={{ color: "#5ebeec" }}>Forgot?</Text>
+            <Text style={{ color: '#5ebeec' }}>Forgot?</Text>
           </Pressable>
         )}
 
         {/**/}
         {/**/}
-        {pageToShowFun("loginpage") && (
+        {pageToShowFun('loginpage') && (
           <Pressable
             style={p.styles.pressableButton}
             onPress={() => {
@@ -151,7 +152,7 @@ export function Authentication_Screen() {
             <Text style={p.styles.pressableButtonText}>Login</Text>
           </Pressable>
         )}
-        {pageToShowFun("signuppage") && (
+        {pageToShowFun('signuppage') && (
           <Pressable
             style={p.styles.pressableButton}
             onPress={() => {
@@ -161,7 +162,7 @@ export function Authentication_Screen() {
             <Text style={p.styles.pressableButtonText}>Create Account</Text>
           </Pressable>
         )}
-        {pageToShowFun("forgotpage") && (
+        {pageToShowFun('forgotpage') && (
           <Pressable
             style={p.styles.pressableButton}
             onPress={() => {
@@ -169,7 +170,7 @@ export function Authentication_Screen() {
                 settextInput((prevState) => {
                   const updatedState = {};
                   Object.keys(prevState).forEach((key) => {
-                    updatedState[key] = ""; // Set each field to an empty string
+                    updatedState[key] = ''; // Set each field to an empty string
                   });
                   return updatedState;
                 });
@@ -181,57 +182,57 @@ export function Authentication_Screen() {
         )}
         {/**/}
         {/**/}
-        {pageToShowFun("loginpage") && (
+        {pageToShowFun('loginpage') && (
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Text>Don't have an account?</Text>
             <Pressable
               onPress={() => {
-                setpageToShow("signuppage");
+                setpageToShow('signuppage');
               }}
             >
-              <Text style={{ color: "#5ebeec" }}> SignUp</Text>
+              <Text style={{ color: '#5ebeec' }}> SignUp</Text>
             </Pressable>
           </View>
         )}
-        {pageToShowFun("signuppage") && (
+        {pageToShowFun('signuppage') && (
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Text>Have an account?</Text>
             <Pressable
               onPress={() => {
-                setpageToShow("loginpage");
+                setpageToShow('loginpage');
               }}
             >
-              <Text style={{ color: "#5ebeec" }}> Login</Text>
+              <Text style={{ color: '#5ebeec' }}> Login</Text>
             </Pressable>
           </View>
         )}
-        {pageToShowFun("forgotpage") && (
+        {pageToShowFun('forgotpage') && (
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Text>Remember password?</Text>
             <Pressable
               onPress={() => {
-                setpageToShow("loginpage");
+                setpageToShow('loginpage');
               }}
             >
-              <Text style={{ color: "#5ebeec" }}> Login</Text>
+              <Text style={{ color: '#5ebeec' }}> Login</Text>
             </Pressable>
           </View>
         )}
@@ -270,7 +271,7 @@ export function Home_Screen({ route, navigation }) {
       <Pressable
         style={p.styles.pressableButton}
         onPress={() => {
-          navigation.navigate("Profile"); // Pass parameters here
+          navigation.navigate('Profile'); // Pass parameters here
         }}
       >
         <Text style={p.styles.pressableButtonText}>Profile</Text>
@@ -287,8 +288,8 @@ export function ManageProfile_Screen({ navigation }) {
   const { _isLoggedIn_returnUserId, _setisLoading } = useGlobalState();
   const get_userId = _isLoggedIn_returnUserId;
   const [ProfileTextInput, setProfileTextInput] = useState({
-    fullname: "",
-    email: "",
+    fullname: '',
+    email: '',
   });
   const handleChange_textInput = (field, value) => {
     setProfileTextInput((prevState) => ({
@@ -301,29 +302,29 @@ export function ManageProfile_Screen({ navigation }) {
     _setisLoading(true);
     setTimeout(function () {
       (async function () {
-        const userProfileRes = await p._http_request("POST", {
-          cors_token: "111cors_tokencors_tokencors_tokors_token",
-          action: "nw95yiuw6iu",
+        const userProfileRes = await p._http_request('POST', {
+          cors_token: '111cors_tokencors_tokencors_tokors_token',
+          action: 'nw95yiuw6iu',
           user_id: p.help.encodeStr(get_userId),
         });
         if (userProfileRes?.code === 200) {
           setProfileTextInput({
-            fullname: userProfileRes?.user_info?.user_fullname ?? "",
-            email: userProfileRes?.user_info?.user_email ?? "",
+            fullname: userProfileRes?.user_info?.user_fullname ?? '',
+            email: userProfileRes?.user_info?.user_email ?? '',
           });
         } else {
           Toast.show({
-            type: "info",
-            text1: "No user",
-            text2: userProfileRes?.message ?? "No User found!",
-            position: "bottom",
+            type: 'info',
+            text1: 'No user',
+            text2: userProfileRes?.message ?? 'No User found!',
+            position: 'bottom',
             visibilityTime: 15000,
           });
         }
       })();
       _setisLoading(false);
     }, 1000);
-  }, []);
+  }, [_setisLoading, get_userId]);
 
   return (
     <>
@@ -334,7 +335,7 @@ export function ManageProfile_Screen({ navigation }) {
           placeholder="Full Name"
           value={ProfileTextInput.fullname}
           onChangeText={(v) => {
-            handleChange_textInput("fullname", v);
+            handleChange_textInput('fullname', v);
           }}
         />
 
@@ -344,7 +345,7 @@ export function ManageProfile_Screen({ navigation }) {
           placeholder="Email"
           value={ProfileTextInput.email}
           onChangeText={(v) => {
-            handleChange_textInput("email", v);
+            handleChange_textInput('email', v);
           }}
         />
 
