@@ -10,12 +10,16 @@ import {
 import * as p from '../_m/p';
 import { useGlobalState } from '../_m/use_set_state';
 import Toast from 'react-native-toast-message';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Example using FontAwesome
 
 /*
   loaderStarts_screen ()
 
 */
 export function LoaderStarts_screen() {
+  const { Loader } = useGlobalState();
+  if (!Loader.Active) { return null; }
+
   return (
     <View
       style={{
@@ -28,8 +32,8 @@ export function LoaderStarts_screen() {
         right: 0,
         bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        zIndex:10,
-        elevation:10,
+        zIndex: 10,
+        elevation: 10,
       }}
     >
       <ActivityIndicator size="large" color="#0000ff" />
@@ -254,9 +258,9 @@ export function Home_Screen({ route, navigation }) {
   const get_setuserId = _isLoggedIn_returnUserId;
 
   return (
-    <View style={[p.styles.container]}>
+    <View style={[p.styles.container, { position: 'relative' }]}>
       <Text>User Id up {get_setuserId}.js Working on your app!</Text>
-      <Pressable style={p.styles.pressableButton} onPress={async () => {}}>
+      <Pressable style={p.styles.pressableButton} onPress={async () => { }}>
         <Text style={p.styles.pressableButtonText}>Test button</Text>
       </Pressable>
 
@@ -276,6 +280,11 @@ export function Home_Screen({ route, navigation }) {
       >
         <Text style={p.styles.pressableButtonText}>Profile</Text>
       </Pressable>
+
+      <View style={{ background: 'red', right: 0, position: 'absolute', bottom: 0 }}>
+        <Icon name="home" size={30} color="blue" />
+
+      </View>
     </View>
   );
 }
@@ -349,7 +358,7 @@ export function ManageProfile_Screen({ navigation }) {
           }}
         />
 
-        <Pressable style={p.styles.pressableButton} onPress={async () => {}}>
+        <Pressable style={p.styles.pressableButton} onPress={async () => { }}>
           <Text style={p.styles.pressableButtonText}>Update</Text>
         </Pressable>
       </View>

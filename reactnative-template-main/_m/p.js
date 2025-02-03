@@ -5,22 +5,10 @@ import Toast from 'react-native-toast-message';
 const apiUrl = 'http://192.168.56.1/fodonn.oo.folder/api/api.php';
 export const help = {
   encodeStr: (st) => {
-    // rot13( base64encode )
-    return btoa(st).replace(/[A-Za-z]/g, function (c) {
-      return String.fromCharCode(
-        c.charCodeAt(0) + (c.toLowerCase() <= 'm' ? 13 : -13)
-      );
-    }); //.split('').reverse().join('');
+//.split('').reverse().join('');
   },
   decodeStr: (st) => {
-    // base64decode ( rot13 )
-    return atob(
-      st.replace(/[A-Za-z]/g, function (c) {
-        return String.fromCharCode(
-          c.charCodeAt(0) + (c.toLowerCase() <= 'm' ? 13 : -13)
-        );
-      })
-    );
+
   },
 };
 
@@ -33,7 +21,8 @@ export const log = (s, c = '#fff') => {
   console.log('%c$>>>>>>>>>>>:0:<<', 'color: ' + c + '; font-size: 16px;');
   console.log(s);
   console.log('%cEND LOG\n', 'color: ' + c + '; font-size: 16px;');
-};
+}; 
+
 
 export const _http_request = async (
   reqType = 'GET',

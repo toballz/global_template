@@ -1,22 +1,25 @@
 import React, { createContext, useContext, useState } from "react";
-
 // Create a context
 const UserContext = createContext();
 
 // Create a provider component
 export const GlobalStateContainer = ({ children }) => {
-  const [_isLoggedIn_returnUserId, _setisLoggedIn_returnUserId] = useState(
-    false
-  );
-  const [_isLoading, _setisLoading] = useState(null);
+  const [_isLoggedIn_returnUserId, _setisLoggedIn_returnUserId] = useState(false);
+  const [_isLoading, _setisLoading] = useState(false);
+
+  const Loader = {
+    Active: _isLoading,
+    Show: () => { _setisLoading(true); },
+    Hide: () => { _setisLoading(false); },
+  };
+
 
   return (
     <UserContext.Provider
       value={{
         _isLoggedIn_returnUserId,
         _setisLoggedIn_returnUserId,
-        _isLoading,
-        _setisLoading,
+        Loader,
       }}
     >
       {children}
@@ -28,3 +31,5 @@ export const GlobalStateContainer = ({ children }) => {
 export const useGlobalState = () => {
   return useContext(UserContext);
 };
+
+
