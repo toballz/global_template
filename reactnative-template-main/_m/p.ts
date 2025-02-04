@@ -1,35 +1,42 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, StyleSheet } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { useGlobalState } from './use_set_state';
 
-const apiUrl = 'http://192.168.56.1/fodonn.oo.folder/api/api.php';
+// Define API URL
+const apiUrl = 'https://stable-dassie-remarkably.ngrok-free.app/fodonn.oo.folder/api/datingapp_apii.php';
+
+// Helper functions for encoding/decoding
 export const help = {
-  encodeStr: (st) => {
-//.split('').reverse().join('');
+  encodeStr: (st: string): string => {
+    // Placeholder for actual encoding logic
+    return st.split('').reverse().join('');
   },
-  decodeStr: (st) => {
-
+  decodeStr: (st: string): string => {
+    // Placeholder for actual decoding logic
+    return st.split('').reverse().join('');
   },
 };
 
+// Namer object to store userId
 export const namer = {
   userId: 'argsyk6tD',
 };
 
-export const log = (s, c = '#fff') => {
-  //
-  console.log('%c$>>>>>>>>>>>:0:<<', 'color: ' + c + '; font-size: 16px;');
+// Log function for debugging
+export const log = (s: string, c: string = '#fff'): void => {
+  console.log('%c$>>>>>>>>>>>:0:<<', `color: ${c}; font-size: 16px;`);
   console.log(s);
-  console.log('%cEND LOG\n', 'color: ' + c + '; font-size: 16px;');
-}; 
+  console.log('%cEND LOG\n', `color: ${c}; font-size: 16px;`);
+};
 
-
+// HTTP request function (GET/POST)
 export const _http_request = async (
-  reqType = 'GET',
-  bodyArray = {},
-  headerArray = { 'Content-Type': 'application/json' },
-  displayErr = false
-) => {
+  reqType: 'GET' | 'POST' = 'GET',
+  bodyArray: Record<string, any> = {},
+  headerArray: Record<string, string> = { 'Content-Type': 'application/json' },
+  displayErr: boolean = false
+): Promise<any | null> => {
   log('http', 'yellow');
   try {
     const response = await fetch(apiUrl, {
@@ -38,8 +45,14 @@ export const _http_request = async (
       ...(reqType === 'POST' && { body: JSON.stringify(bodyArray) }),
     });
     if (displayErr) {
-      console.log(await response.text());
-      return;
+      Toast.show({
+        type: 'error',
+        text1: 'Login Error',
+        text2: await response.text(),
+        position: 'bottom',
+        visibilityTime: 15000,
+      });
+      return null;
     }
     if (reqType === 'POST') {
       return await response.json();
@@ -48,12 +61,12 @@ export const _http_request = async (
     }
   } catch (error) {
     log('Error: _http_request: ' + error, 'red');
+    return null;
   }
-  return null;
 };
 
-// Check login status
-export const isLoggedIn_returnUserId = async () => {
+// Check if the user is logged in and return the userId
+export const isLoggedIn_returnUserId = async (): Promise<string | false> => {
   try {
     const userId = await AsyncStorage.getItem(namer.userId);
     return userId || false;
@@ -64,43 +77,56 @@ export const isLoggedIn_returnUserId = async () => {
 };
 
 // Handle login
-export const _handle_Login = async (textInput_, get_setuserId_) => {
-  let err = false;
-  if (textInput_?.email?.length <= 5 || textInput_?.password?.length <= 5) {
+export const _handle_Signin = async (textInput_: { phonenumber: string; password: string }): Promise<void> => {
+  const { Loader, CurrentUser } = useGlobalState();
+  let err: string | false = false;
+
+  if (textInput_.phonenumber.length <= 5) {
     err = 'Invalid username or password!';
   }
 
-  if (!err) {
-    const loginRes = await _http_request('POST', {
-      cors_token: '111cors_tokencors_tokencors_tokors_token',
-      action: 'guest-login',
-      login_email: help.encodeStr(textInput_.email),
-      login_password: help.encodeStr(textInput_.password),
-    });
-    if (loginRes?.code === 200) {
-      let uid = loginRes?.user_id + '' ?? '';
-      if (uid !== '') {
-        await AsyncStorage.setItem(namer.userId, uid);
-        get_setuserId_(uid);
+  Loader.Show(true);
+  setTimeout(async () => {
+    if (!err) {
+      const loginRes = await _http_request('POST', {
+        cors_token: '111cors_tokencors_tokencors_tokors_token',
+        action: 'guest-login',
+        user_phone: textInput_.phonenumber,
+        user_password: textInput_.password,
+      });
+      if (loginRes?.code === 200) {
+        CurrentUser.SessionId.set(loginRes?.cors_token ?? false);
+        let uid = loginRes?.user_id ?? '';
+        if (uid !== '') {
+          // await AsyncStorage.setItem(namer.userId, uid);
+          // get_setuserId_(uid);
+        }
+      } else {
+        err = loginRes?.message ?? loginRes;
       }
-    } else { err = loginRes?.message ?? loginRes; }
-  }
+    }
 
-  if (err) {
-    Toast.show({
-      type: 'error',
-      text1: 'Login Error',
-      text2: err,
-      position: 'bottom',
-      visibilityTime: 15000,
-    });
-    Alert.alert('Login Failed', err);
-  }
+    if (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Login Error',
+        text2: err,
+        position: 'bottom',
+        visibilityTime: 15000,
+      });
+      Alert.alert('Login Failed', err);
+    }
+    Loader.Show(false);
+  }, 1000);
 };
 
 // Handle signup
-export const _handle_Signup = async (textInput_, get_setuserId) => {
-  let err = false;
+export const _handle_Signup = async (
+  textInput_: { verifypassword: string; password: string; email: string },
+  get_setuserId: (uid: string) => void
+): Promise<void> => {
+  let err: string | false = false;
+
   if (textInput_.verifypassword !== textInput_.password) {
     err = 'Passwords do not match!';
   } else if (textInput_.password.length <= 5) {
@@ -125,7 +151,7 @@ export const _handle_Signup = async (textInput_, get_setuserId) => {
       undefined
     );
     if (signupRes?.code === 200) {
-      let uid = signupRes?.user_id + '' ?? '';
+      let uid = signupRes?.user_id ?? '';
       if (uid !== '') {
         await AsyncStorage.setItem(namer.userId, uid);
         get_setuserId(uid);
@@ -145,9 +171,13 @@ export const _handle_Signup = async (textInput_, get_setuserId) => {
     Alert.alert('Signup Failed', err);
   }
 };
-// Handle recover
-export const _handle_Recover = async (textInput_, get_setuserId_) => {
-  let err = false;
+
+// Handle password recovery
+export const _handle_Recover = async (
+  textInput_: any
+): Promise<void> => {
+  let err: string | false = false;
+
   if (textInput_?.email?.length <= 5) {
     err = 'Invalid Email!';
   }
@@ -167,12 +197,13 @@ export const _handle_Recover = async (textInput_, get_setuserId_) => {
       Toast.show({
         type: 'success',
         text1: 'Recovery Success',
-        text2:
-          'Your recovery instruction has been sent to your email, if this email exists.',
+        text2: 'Your recovery instruction has been sent to your email, if this email exists.',
         position: 'bottom',
         visibilityTime: 15000,
       });
-    } else { err = loginRes?.message ?? loginRes; }
+    } else {
+      err = loginRes?.message ?? loginRes;
+    }
   }
 
   if (err) {
@@ -188,7 +219,7 @@ export const _handle_Recover = async (textInput_, get_setuserId_) => {
 };
 
 // Handle logout
-export const handleLogout = async (_setisLoggedIn_returnUserId) => {
+export const handleLogout = async (_setisLoggedIn_returnUserId: (status: boolean) => void): Promise<void> => {
   try {
     await AsyncStorage.removeItem(namer.userId);
     _setisLoggedIn_returnUserId(false);
@@ -197,21 +228,15 @@ export const handleLogout = async (_setisLoggedIn_returnUserId) => {
   }
 };
 
-// Styles
-// Styles
-// Styles
-// Styles
-// Styles
-// Styles
-// Styles
-// Styles
-// Styles
-// Styles
+// Styles for the components
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     backgroundColor: '#f5f5f5',
+    paddingLeft: 7,
+    paddingRight: 7,
+    paddingTop: 5,
+    position: 'relative',
   },
   input: {
     height: 40,
@@ -241,5 +266,17 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'white',
+  },
+  peoples_card: {
+    marginTop: 10,
+    padding: 15,
+    borderRadius: 12,
+    borderWidth: 1,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 2,
   },
 });
